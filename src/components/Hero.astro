@@ -1,0 +1,51 @@
+---
+interface ExperienceItem {
+  title: string;
+  detail: string;
+}
+
+interface LinkItem {
+  href: string;
+  label: string;
+}
+
+interface Props {
+  name: string;
+  headline: string;
+  bio: string;
+  avatar: string;
+  experience: readonly ExperienceItem[];
+  contactLinks: readonly LinkItem[];
+}
+
+const { name, headline, bio, avatar, experience, contactLinks } = Astro.props;
+---
+
+<section class="site-shell hero">
+  <div class="hero-copy">
+    <p class="eyebrow">Personal Homepage</p>
+    <h1>{name}</h1>
+    <p class="headline">{headline}</p>
+    <p class="hero-bio">{bio}</p>
+    <div class="cta-row">
+      <a class="button primary" href="/projects">查看项目</a>
+      <a class="button" href="/blog">阅读博客</a>
+    </div>
+    <ul class="contact-list">
+      {contactLinks.map((item) => (
+        <li><a href={item.href}>{item.label}</a></li>
+      ))}
+    </ul>
+  </div>
+  <div class="hero-card">
+    <img src={avatar} alt={`${name} avatar`} width="240" height="240" />
+    <ul class="experience-list">
+      {experience.map((item) => (
+        <li>
+          <strong>{item.title}</strong>
+          <span>{item.detail}</span>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>

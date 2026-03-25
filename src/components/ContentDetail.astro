@@ -1,0 +1,33 @@
+---
+import { formatDate } from "../lib/content";
+
+interface Action {
+  href: string;
+  label: string;
+}
+
+interface Props {
+  title: string;
+  description: string;
+  date: Date;
+  actions?: Action[];
+}
+
+const { title, description, date, actions = [] } = Astro.props;
+---
+
+<article class="site-shell detail-page">
+  <p class="content-date">{formatDate(date)}</p>
+  <h1>{title}</h1>
+  <p class="detail-description">{description}</p>
+  {actions.length > 0 && (
+    <div class="cta-row">
+      {actions.map((action) => (
+        <a class="button" href={action.href}>{action.label}</a>
+      ))}
+    </div>
+  )}
+  <div class="detail-content">
+    <slot />
+  </div>
+</article>

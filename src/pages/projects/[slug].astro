@@ -1,0 +1,38 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import SiteHeader from "../../components/SiteHeader.astro";
+import SiteFooter from "../../components/SiteFooter.astro";
+import ContentDetail from "../../components/ContentDetail.astro";
+import "../../styles/global.css";
+
+export async function getStaticPaths() {
+  const entries = await getCollection("projects");
+  return entries.map((entry) => ({
+    params: { slug: entry.slug },
+    props: { entry }
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+const actions = [
+  ...(entry.data.github ? [{ href: entry.data.github, label: "GitHub" }] : []),
+  ...(entry.data.demo ? [{ href: entry.data.demo, label: "Live Demo" }] : [])
+];
+---
+
+<BaseLayout title={entry.data.title} description={entry.data.description}>
+  <SiteHeader />
+  <main>
+    <ContentDetail
+      title={entry.data.title}
+      description={entry.data.description}
+      date={entry.data.date}
+      actions={actions}
+    >
+      <Content />
+    </ContentDetail>
+  </main>
+  <SiteFooter />
+</BaseLayout>

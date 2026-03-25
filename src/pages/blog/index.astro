@@ -1,0 +1,31 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import SiteHeader from "../../components/SiteHeader.astro";
+import SiteFooter from "../../components/SiteFooter.astro";
+import PageIntro from "../../components/PageIntro.astro";
+import ContentCard from "../../components/ContentCard.astro";
+import { getSortedCollection } from "../../lib/content";
+import "../../styles/global.css";
+
+const posts = await getSortedCollection("blog");
+---
+
+<BaseLayout title="博客" description="Aquiloo 的博客文章">
+  <SiteHeader />
+  <main>
+    <PageIntro title="博客" description="记录项目推进、设计取舍与对工具、研究、长期创作的思考。" />
+    <section class="site-shell content-grid-section">
+      <div class="content-grid">
+        {posts.map((entry) => (
+          <ContentCard
+            href={`/blog/${entry.slug}`}
+            title={entry.data.title}
+            description={entry.data.description}
+            date={entry.data.date}
+          />
+        ))}
+      </div>
+    </section>
+  </main>
+  <SiteFooter />
+</BaseLayout>

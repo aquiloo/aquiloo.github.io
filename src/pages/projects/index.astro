@@ -1,0 +1,35 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import SiteHeader from "../../components/SiteHeader.astro";
+import SiteFooter from "../../components/SiteFooter.astro";
+import PageIntro from "../../components/PageIntro.astro";
+import ContentCard from "../../components/ContentCard.astro";
+import { getSortedCollection } from "../../lib/content";
+import "../../styles/global.css";
+
+const projects = await getSortedCollection("projects");
+---
+
+<BaseLayout title="项目" description="Aquiloo 的项目列表">
+  <SiteHeader />
+  <main>
+    <PageIntro title="项目" description="展示正在构建与已经完成的项目，强调问题定义、实现路径与公开链接。" />
+    <section class="site-shell content-grid-section">
+      <div class="content-grid">
+        {projects.map((entry) => (
+          <ContentCard
+            href={`/projects/${entry.slug}`}
+            title={entry.data.title}
+            description={entry.data.description}
+            date={entry.data.date}
+            meta={[
+              ...(entry.data.github ? ["GitHub"] : []),
+              ...(entry.data.demo ? ["Demo"] : [])
+            ]}
+          />
+        ))}
+      </div>
+    </section>
+  </main>
+  <SiteFooter />
+</BaseLayout>

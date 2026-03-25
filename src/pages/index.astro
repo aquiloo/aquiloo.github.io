@@ -1,0 +1,96 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+import SiteFooter from "../components/SiteFooter.astro";
+import Hero from "../components/Hero.astro";
+import SectionHeading from "../components/SectionHeading.astro";
+import ContentCard from "../components/ContentCard.astro";
+import { homeProfile } from "../data/home";
+import { siteConfig } from "../data/site";
+import { getSortedCollection } from "../lib/content";
+import "../styles/global.css";
+
+const projects = await getSortedCollection("projects");
+const blog = await getSortedCollection("blog");
+const papers = await getSortedCollection("papers");
+const featuredProjectSlugs = new Set<string>(homeProfile.featured.projects);
+const featuredBlogSlugs = new Set<string>(homeProfile.featured.blog);
+const featuredPaperSlugs = new Set<string>(homeProfile.featured.papers);
+
+const featuredProjects = projects.filter((entry) => featuredProjectSlugs.has(entry.slug));
+const featuredPosts = blog.filter((entry) => featuredBlogSlugs.has(entry.slug));
+const featuredPapers = papers.filter((entry) => featuredPaperSlugs.has(entry.slug));
+---
+
+<BaseLayout title={siteConfig.title} description={siteConfig.description}>
+  <SiteHeader />
+  <main>
+    <Hero {...homeProfile} />
+
+    <section class="site-shell content-grid-section">
+      <SectionHeading
+        title="精选项目"
+        description="围绕工程实践、AI 应用与个人系统建设展开的长期作品。"
+        href="/projects"
+        actionLabel="查看全部"
+      />
+      <div class="content-grid">
+        {featuredProjects.map((entry) => (
+          <ContentCard
+            href={`/projects/${entry.slug}`}
+            title={entry.data.title}
+            description={entry.data.description}
+            date={entry.data.date}
+            meta={[
+              ...(entry.data.github ? ["GitHub"] : []),
+              ...(entry.data.demo ? ["Demo"] : [])
+            ]}
+          />
+        ))}
+      </div>
+    </section>
+
+    <section class="site-shell content-grid-section">
+      <SectionHeading
+        title="最新博客"
+        description="记录构建过程、方法论与阶段性思考。"
+        href="/blog"
+        actionLabel="进入博客"
+      />
+      <div class="content-grid">
+        {featuredPosts.map((entry) => (
+          <ContentCard
+            href={`/blog/${entry.slug}`}
+            title={entry.data.title}
+            description={entry.data.description}
+            date={entry.data.date}
+          />
+        ))}
+      </div>
+    </section>
+
+    <section class="site-shell content-grid-section">
+      <SectionHeading
+        title="研究与论文"
+        description="聚焦于知识系统、研究表达与长期积累。"
+        href="/papers"
+        actionLabel="查看论文"
+      />
+      <div class="content-grid">
+        {featuredPapers.map((entry) => (
+          <ContentCard
+            href={`/papers/${entry.slug}`}
+            title={entry.data.title}
+            description={entry.data.description}
+            date={entry.data.date}
+            meta={[
+              ...(entry.data.pdf ? ["PDF"] : []),
+              ...(entry.data.doi ? ["DOI"] : [])
+            ]}
+          />
+        ))}
+      </div>
+    </section>
+  </main>
+  <SiteFooter />
+</BaseLayout>

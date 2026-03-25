@@ -1,0 +1,35 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import SiteHeader from "../../components/SiteHeader.astro";
+import SiteFooter from "../../components/SiteFooter.astro";
+import PageIntro from "../../components/PageIntro.astro";
+import ContentCard from "../../components/ContentCard.astro";
+import { getSortedCollection } from "../../lib/content";
+import "../../styles/global.css";
+
+const papers = await getSortedCollection("papers");
+---
+
+<BaseLayout title="论文" description="Aquiloo 的论文与研究输出">
+  <SiteHeader />
+  <main>
+    <PageIntro title="论文" description="展示研究问题、论文摘要与可访问的 PDF 或 DOI 链接。" />
+    <section class="site-shell content-grid-section">
+      <div class="content-grid">
+        {papers.map((entry) => (
+          <ContentCard
+            href={`/papers/${entry.slug}`}
+            title={entry.data.title}
+            description={entry.data.description}
+            date={entry.data.date}
+            meta={[
+              ...(entry.data.pdf ? ["PDF"] : []),
+              ...(entry.data.doi ? ["DOI"] : [])
+            ]}
+          />
+        ))}
+      </div>
+    </section>
+  </main>
+  <SiteFooter />
+</BaseLayout>

@@ -1,0 +1,12 @@
+---
+import { siteConfig } from "../data/site";
+---
+
+<footer class="site-shell site-footer">
+  <p>© {new Date().getFullYear()} {siteConfig.title}. Built with Astro and deployed on GitHub Pages.</p>
+  <ul class="social-list">
+    {siteConfig.socialLinks.map((item) => (
+      <li><a href={item.href}>{item.label}</a></li>
+    ))}
+  </ul>
+</footer>

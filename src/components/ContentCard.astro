@@ -1,0 +1,24 @@
+---
+import { formatDate } from "../lib/content";
+
+interface Props {
+  href: string;
+  title: string;
+  description: string;
+  date: Date;
+  meta?: string[];
+}
+
+const { href, title, description, date, meta = [] } = Astro.props;
+---
+
+<article class="content-card">
+  <p class="content-date">{formatDate(date)}</p>
+  <h3><a href={href}>{title}</a></h3>
+  <p>{description}</p>
+  {meta.length > 0 && (
+    <ul class="meta-list">
+      {meta.map((item) => <li>{item}</li>)}
+    </ul>
+  )}
+</article>
